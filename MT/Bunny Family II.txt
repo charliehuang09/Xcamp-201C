@@ -1,0 +1,18 @@
+#include <iostream>
+using namespace std;
+int main() {
+  int month;
+  cin >> month;
+  month--;
+  long long int adult = 0, baby = 2;
+  long int add_adult, add_baby;
+  for (int x = 0; x < month; x++){
+    add_adult = baby;
+    add_baby = ((adult - (adult % 2)) / 2) * 6;
+    adult += add_adult;
+    baby = add_baby;
+  }
+  cout << (adult - (adult % 2)) / 2;
+  cout << "\n";
+  cout << (baby - (baby % 2)) / 2;
+}

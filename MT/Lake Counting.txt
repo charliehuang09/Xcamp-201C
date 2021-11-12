@@ -1,0 +1,94 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+struct coord{
+  int x;
+  int y;
+};
+coord done (vector<vector<int>> input){
+  coord output;
+  for (int x = 0; x < input.size(); x++){
+    for (int y = 0; y < input[0].size(); y++){
+      if (input[x][y] == 1){
+        output.x = x;
+        output.y = y;
+        return output;
+      }
+    }
+  }
+  output.x = -1;
+  output.y = -1;
+  return output;
+}
+vector<vector<int>> fill(vector<vector<int>> input, int x, int y){
+    if (x == -1 || x == input.size()){
+        return input;
+    }
+    if (y == -1 || y == input[0].size()){
+        return input;
+    }
+    if (input[x][y] == 0){
+        return input;
+    }
+    input[x][y] = 0;
+    input = fill(input, x + 1, y);
+    input = fill(input, x + 1, y + 1);
+    input = fill(input, x + 1, y - 1);
+    input = fill(input, x - 1, y);
+    input = fill(input, x - 1, y + 1);
+    input = fill(input, x - 1, y - 1);
+    input = fill(input, x, y + 1);
+    input = fill(input, x , y - 1);
+    return input;
+}
+int main() {
+  int length, width;
+  cin >> length >> width;
+  vector<vector<int>> input;
+  vector <int> tempa;
+  string tempb;
+  for (int x = 0; x < length; x++){
+    cin >> tempb;
+    for (int y = 0; y < width; y++){
+      if (tempb[y] == '1'){
+        tempa.push_back(1);
+      }
+      if (tempb[y] == '0'){
+        tempa.push_back(0);
+      }
+    }
+    input.push_back(tempa);
+    tempa.clear();
+  }
+  coord start;
+  int output = 0;
+  while (true){
+    start = done (input);
+    if (start.x != -1){
+      input = fill(input, start.x,start.y);
+      output++;
+    }
+    else{
+      break;
+    }
+  }
+  cout << output;
+  
+  // input = fill (input, 0,0);
+  // for (int x = 0; x < input.size(); x++){
+  //   for (int y = 0; y < input[0].size(); y++){
+  //     cout << input[x][y] << " ";
+  //   }
+  //   cout << "\n";
+  // }
+  
+}
+/*
+5 5
+1 1 1 0 1
+1 1 0 1 1
+1 0 1 1 1
+0 0 0 0 0
+1 1 1 1 1
+*/
