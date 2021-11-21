@@ -1,4 +1,6 @@
-#include<bits/stdc++.h>
+#include<iostream>
+#include<queue>
+#include<vector>
 using namespace std;
 struct PNT { // define struct to push to queue
 	int x, y;
@@ -20,6 +22,7 @@ PNT portal(PNT point, char portal){//find portal
             }
         }
     }
+    return PNT(0,0);
 }
 int main() {
     int dx[4] = { 0, 0, 1, -1 };
@@ -29,19 +32,21 @@ int main() {
     for (int i = 0; i < colm; i++){
         cin >> temp;
         maze.push_back(temp);
-    }  
-    int visited[colm][row];
-    int ways[colm][row];
-    int dist[colm][row];
+    }
+    vector<vector<int> > vaisited;
+    vector<vector<int> > ways;
+    vector<vector<int> > dist;
+    vector<int> abc;
     for (int i = 0; i < colm; i++){//intialize 0
         for (int j = 0; j < row; j++){
-            visited[i][j] = 0;
-            ways[i][j] = 0;
-            dist[i][j] = 0;
+            abc.push_back(0);
         }
+        vaisited.push_back(abc);
+        ways.push_back(abc);
+        dist.push_back(abc);
     }
     queue<PNT> q;
-    visited[0][0] = 1;
+    vaisited[0][0] = 1;
     ways[0][0] = 1;
     q.push(PNT(0,0));
     
@@ -58,10 +63,10 @@ int main() {
                     ny = temp2.y;
                     //cout << nx << " " << ny << "\n";
                 }
-                if (visited[nx][ny] == 0) { // first time to be here
+                if (vaisited[nx][ny] == 0) { // first time to be here
                     dist[nx][ny] = dist[pt.x][pt.y] + 1; // shortest path to this pos 
                     ways[nx][ny] = ways[pt.x][pt.y];
-                    visited[nx][ny] = 1;
+                    vaisited[nx][ny] = 1;
                     q.push(PNT(nx, ny));
                 }
                 else if (dist[nx][ny] == dist[pt.x][pt.y] + 1) 
