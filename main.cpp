@@ -1,77 +1,129 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <queue>
 using namespace std;
-struct PNT { // define struct to push to queue
-	int x, y;
-	PNT (int x0, int y0) : x(x0), y(y0){};
+struct coord{
+    int x;
+    int y;
+    int z;
 };
+int dy[3] = {0,1,-1};
+int dx[3] = {0,1,-1};
+int dz[3] = {0,1,-1};
+vector<vector<vector<int>>> board;
+vector<vector<vector<int>>> visited;
+vector<vector<vector<int>>> dist;
 
-vector<string> maze;
-int colm, row;
-PNT portal(PNT point, char portal){//find portal
-    for (int i = 0; i < colm; i++){//intialize 0
-        for (int j = 0; j < row; j++){
-            if (i == point.x && j == point.y){
-
+void printboard(){
+    cout << "\n\n";
+    for (int i = 0; i < board.size(); i++){
+        for (int j = 0; j < board[i].size(); j++){
+            for (int k = 0; k < board[i][j].size(); k++){
+                cout << board[i][j][k] << " ";
             }
-            else{
-                if (maze[i][j] == portal){
-                    return PNT(i,j);
+            cout << "\n";
+        }
+        cout << "\n\n\n";
+    }
+    cout << "\n\n";
+    return;
+}
+
+bool inbound(int y, int z, int x){
+    try{
+        throw 60;
+        board[y][z][x];
+        return true;
+    }
+    catch(int x){
+        return false;
+    }
+}
+
+int solve(){
+    board.clear();
+    int x,y,z,time_limit;
+    cin >> y >> z >> x >> time_limit;
+    vector<vector<int>> tempa;
+    vector<int> tempb;
+    int tempc;
+    for (int i = 0; i < y; i++){
+        tempa.clear();
+        for (int j = 0; j < z; j++){
+            tempb.clear();
+            for (int k = 0; k < x; k++){
+                tempb.push_back(0);
+            }
+            tempa.push_back(tempb);
+        }
+        visited.push_back(tempa);
+        dist.push_back(tempa);
+    }
+
+
+    
+    for (int i = 0; i < y; i++){
+        tempa.clear();
+        for (int j = 0; j < z; j++){
+            tempb.clear();
+            for (int k = 0; k < x; k++){
+                cin >> tempc;
+                tempb.push_back(tempc);
+            }
+            tempa.push_back(tempb);
+        }
+        board.push_back(tempa);
+    }
+    printboard();
+    return 0;
+    printboard();
+    queue<coord> q;
+    coord point;
+    coord tempd;
+    tempd.x = 0;
+    tempd.y = 0;
+    tempd.z = 0;
+    q.push(tempd);
+    while (!q.empty()){
+        point = q.front();
+        q.pop();
+        for (int i = 0; i < 3; i++){
+            for (int j = 0; j < 3; j++){
+                for (int k = 0; k < 3; k++){
+                    if (i + j + k != 0){
+                        if (inbound(point.y + dy[i], point.z + dz[j], point.x + dx[k]) == true){
+                            board[point.y][point.z + dz[j]][point.x + dx[k]];
+                            
+                        }
+                    }
                 }
             }
         }
     }
+
+
+
+
+    return 0;
+
 }
 int main() {
-    int dx[4] = { 0, 0, 1, -1 };
-    int dy[4] = { 1, -1, 0, 0 };
-    cin >> colm >> row;
-    string temp;
-    for (int i = 0; i < colm; i++){
-        cin >> temp;
-        maze.push_back(temp);
-    }  
-    int visited[colm][row];
-    int ways[colm][row];
-    int dist[colm][row];
-    for (int i = 0; i < colm; i++){//intialize 0
-        for (int j = 0; j < row; j++){
-            visited[i][j] = 0;
-            ways[i][j] = 0;
-            dist[i][j] = 0;
-        }
+    int cases;
+    cin >> cases;
+    for (int i = 0; i < cases; i++){
+        cout << solve();
     }
-    queue<PNT> q;
-    visited[0][0] = 1;
-    ways[0][0] = 1;
-    q.push(PNT(0,0));
-    
-    while(!q.empty()) {
-        PNT pt = q.front();
-        q.pop(); // remove front
-        for(int i = 0; i < 4; i++) {
-            int nx = pt.x + dx[i];
-            int ny = pt.y + dy[i];
-            if (nx >= 0 && nx < colm && ny >= 0 && ny < row && maze[nx][ny] != '1') { // can move, no need to check visited
-                if (maze[nx][ny] != '0'){
-                    PNT temp2 = portal(PNT(nx,ny), maze[nx][ny]); 
-                    nx = temp2.x;
-                    ny = temp2.y;
-                    //cout << nx << " " << ny << "\n";
-                }
-                if (visited[nx][ny] == 0) { // first time to be here
-                    dist[nx][ny] = dist[pt.x][pt.y] + 1; // shortest path to this pos 
-                    ways[nx][ny] = ways[pt.x][pt.y];
-                    visited[nx][ny] = 1;
-                    q.push(PNT(nx, ny));
-                }
-                else if (dist[nx][ny] == dist[pt.x][pt.y] + 1) 
-                    ways[nx][ny] += ways[pt.x][pt.y]; // need to add new ways
-            }
-        }
-    }
-    if (dist[colm - 1][row - 1] == 0){
-        cout << "No Solution.";
-        return 0;
-    }
-    cout << dist[colm - 1][row - 1]; // ways to end point
 }
+/*
+1
+3 3 4 20
+0 1 1 1
+0 0 1 1
+0 1 1 1
+1 1 1 1
+1 0 0 1
+0 1 1 1
+0 0 0 0
+0 1 1 0
+0 1 1 0
+*/
