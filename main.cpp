@@ -19,7 +19,7 @@ void printboard(){
     for (int i = 0; i < board.size(); i++){
         for (int j = 0; j < board[i].size(); j++){
             for (int k = 0; k < board[i][j].size(); k++){
-                cout << board[i][j][k] << " ";
+                cout << visited[i][j][k] << " ";
             }
             cout << "\n";
         }
@@ -31,15 +31,14 @@ void printboard(){
 
 bool inbound(int y, int z, int x){
     try{
-        throw 60;
         board[y][z][x];
         return true;
+        throw 69;
     }
     catch(int x){
         return false;
     }
 }
-
 int solve(){
     board.clear();
     int x,y,z,time_limit;
@@ -59,9 +58,6 @@ int solve(){
         visited.push_back(tempa);
         dist.push_back(tempa);
     }
-
-
-    
     for (int i = 0; i < y; i++){
         tempa.clear();
         for (int j = 0; j < z; j++){
@@ -74,9 +70,6 @@ int solve(){
         }
         board.push_back(tempa);
     }
-    printboard();
-    return 0;
-    printboard();
     queue<coord> q;
     coord point;
     coord tempd;
@@ -90,21 +83,33 @@ int solve(){
         for (int i = 0; i < 3; i++){
             for (int j = 0; j < 3; j++){
                 for (int k = 0; k < 3; k++){
+                    cout << "D";
                     if (i + j + k != 0){
+                        cout << "D???";
                         if (inbound(point.y + dy[i], point.z + dz[j], point.x + dx[k]) == true){
-                            board[point.y][point.z + dz[j]][point.x + dx[k]];
-                            
+                            cout << "a";
+                            coord nextpoint;
+                            nextpoint.x = point.x + dx[k];
+                            nextpoint.y = point.y + dy[i];
+                            nextpoint.z = point.z + dz[j];
+                            if (visited[nextpoint.y][nextpoint.z][nextpoint.x] == 0){
+                                dist[nextpoint.y][nextpoint.z][nextpoint.x] = dist[point.y][point.z][point.x];
+                                visited[nextpoint.y][nextpoint.z][nextpoint.x] = 1;
+                                coord temp;
+                                q.push(nextpoint);
+                                cout << "D";
+                            }   
                         }
                     }
                 }
             }
         }
     }
+    printboard();
 
 
 
-
-    return 0;
+    return dist[dist.size() - 1][dist[0].size() - 1][dist[0][0].size() - 1];
 
 }
 int main() {
